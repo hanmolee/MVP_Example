@@ -7,6 +7,8 @@ import com.hanmo.mvp_example.model.Dog
 interface SearchContract {
 
     interface View : BaseView {
+        fun showLoading()
+        fun hideLoading()
         fun showDogList(dogList : List<Dog>)
     }
 

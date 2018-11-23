@@ -1,6 +1,9 @@
 package com.hanmo.mvp_example.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import com.hanmo.mvp_example.R
 import com.hanmo.mvp_example.base.BaseActivity
 import com.hanmo.mvp_example.model.Dog
@@ -10,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : BaseActivity(), SearchContract.View {
 
-    lateinit var searchPresenter: SearchPresenter
+    private lateinit var searchPresenter: SearchPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,10 +21,21 @@ class SearchActivity : BaseActivity(), SearchContract.View {
 
         searchPresenter.takeView(this)
 
+        setButton()
+
     }
 
-    override fun showDogList(dogList : List<Dog>) {
+    private fun setButton() {
+        getDogListButton.setOnClickListener {
+            searchPresenter.getDogList()
+        }
+    }
 
+    @SuppressLint("SetTextI18n")
+    override fun showDogList(dogList : List<Dog>) {
+        firstDogText.text = "Name : ${dogList[0].name}, Age : ${dogList[0].age}"
+        secondDogText.text = "Name : ${dogList[1].name}, Age : ${dogList[1].age}"
+        thirdDogText.text = "Name : ${dogList[2].name}, Age : ${dogList[2].age}"
     }
 
     override fun onDestroy() {
@@ -35,7 +49,15 @@ class SearchActivity : BaseActivity(), SearchContract.View {
     }
 
     override fun showError(error: String) {
+        Toast.makeText(this@SearchActivity, error, Toast.LENGTH_SHORT).show()
+    }
 
+    override fun showLoading() {
+        searchRefresh.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        searchRefresh.visibility = View.GONE
     }
 
 }
